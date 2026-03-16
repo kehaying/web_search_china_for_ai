@@ -4,6 +4,10 @@ import re
 from bs4 import BeautifulSoup
 import sys
 import argparse
+import io
+
+# 设置stdout编码为UTF-8，避免Windows控制台的GBK编码错误
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 class WebSearchChina:
     def __init__(self):
