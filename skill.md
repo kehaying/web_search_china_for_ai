@@ -1,6 +1,6 @@
 ---
 name: "web_search_china"
-description: "针对AI agent等类openclaw程序，提供中国国内的搜索引擎功能，支持百度、必应中国版、360搜索等，类似于Tavily的搜索体验。当用户需要获取中国国内的搜索结果或信息时调用"
+description: "针对AI agent等类openclaw程序，提供中国国内的搜索引擎功能，支持百度、必应中国版、360搜索、Tavily等，当用户需要获取中国国内的搜索结果或信息时调用"
 ---
 
 # 中国国内搜索引擎
@@ -9,7 +9,7 @@ description: "针对AI agent等类openclaw程序，提供中国国内的搜索�
 
 此工具提供中国国内的搜索引擎功能，类似于Tavily，支持以下特点：
 
-- **多引擎支持**：集成百度、必应中国版、360搜索等中国常用搜索引擎
+- **多引擎支持**：集成百度、必应中国版、360搜索、Tavily等搜索引擎
 - **本地化搜索**：针对中国网络环境优化，提供更符合国内用户需求的搜索结果
 - **智能聚合**：整合多个搜索引擎的结果，提供更全面的信息
 - **快速响应**：优化搜索速度，减少网络延迟
@@ -29,8 +29,10 @@ python script/web_search_china.py "搜索关键词" --engine baidu --count 5
 
 参数说明：
 - `搜索关键词`：要搜索的内容（必填）
-- `--engine`：搜索引擎，可选值：`baidu`、`bing`、`360`，默认为 `baidu`
+- `--engine`：搜索引擎，可选值：`baidu`、`bing`、`360`、`tavily`，默认为 `baidu`
 - `--count`：返回结果数量，默认为 5
+
+> **注意**：使用 `tavily` 引擎需要设置环境变量 `TAVILY_API_KEY`。可在 https://app.tavily.com 获取API密钥。
 
 ## 示例
 
@@ -43,6 +45,9 @@ python script/web_search_china.py "人工智能发展趋势" --engine bing
 
 # 搜索北京天气，返回3个结果
 python script/web_search_china.py "北京天气" --engine 360 --count 3
+
+# 使用Tavily搜索（需要设置TAVILY_API_KEY环境变量）
+python script/web_search_china.py "人工智能最新进展" --engine tavily --count 5
 ```
 
 ## 技术实现
