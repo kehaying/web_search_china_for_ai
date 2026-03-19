@@ -1,6 +1,7 @@
 import requests
 import json
 import re
+import os
 from bs4 import BeautifulSoup
 import sys
 import argparse
@@ -14,8 +15,10 @@ class WebSearchChina:
         self.engines = {
             "baidu": self._search_baidu,
             "bing": self._search_bing,
-            "360": self._search_360
+            "360": self._search_360,
+            "tavily": self._search_tavily
         }
+        self.tavily_api_key = os.environ.get("TAVILY_API_KEY")
         self.session = requests.Session()
         self.session.headers.update({
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -233,6 +236,22 @@ class WebSearchChina:
         
         return results
     
+    def _search_tavily(self, query, count):
+        """Tavily搜索"""
+        if not self.tavily_api_key:
+            raise ValueError("TAVILY_API_KEY environment variable is not set. Please set it to use the Tavily engine.")
+        from tavily import TavilyClient
+        client = TavilyClient(api_key=self.tavily_api_key)
+        response = client.search(query=query, max_results=count, search_depth="basic")
+        results = []
+        for item in response.get("results", []):
+            results.append({
+                "title": item.get("title", ""),
+                "url": item.get("url", ""),
+                "snippet": item.get("content", "")
+            })
+        return results
+
     def _format_results(self, results, count):
         """格式化搜索结果"""
         formatted_results = []
@@ -250,7 +269,7 @@ if __name__ == "__main__":
     # 处理命令行参数
     parser = argparse.ArgumentParser(description="中国国内搜索引擎")
     parser.add_argument("query", help="搜索关键词")
-    parser.add_argument("--engine", default="baidu", choices=["baidu", "bing", "360"], help="搜索引擎")
+    parser.add_argument("--engine", default="baidu", choices=["baidu", "bing", "360", "tavily"], help="搜索引擎")
     parser.add_argument("--count", type=int, default=5, help="返回结果数量")
     
     args = parser.parse_args()
